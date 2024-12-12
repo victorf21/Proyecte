@@ -7,9 +7,9 @@ router = APIRouter(prefix="/cursar", tags=["Cursar"])
 
 # Modelo para la respuesta
 class Cursar(BaseModel):
-    usuario_uid: str
-    aula_codigo: int
-    grupo: str
+    Uid_usuarios: str
+    Nombre_uf: str
+    Codigo_aula: int
 
 # Obtener todos los registros de cursar
 @router.get("/list", response_model=List[Cursar])
@@ -17,7 +17,7 @@ def list_cursar():
     try:
         conn = db_client()
         cursor = conn.cursor(dictionary=True)
-        cursor.execute("SELECT * FROM cursar")
+        cursor.execute("SELECT Uid_usuarios, Codigo_aula, Nombre_uf FROM cursar")
         cursar = cursor.fetchall()
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Error de conexión: {e}")
@@ -33,10 +33,10 @@ def create_cursar(cursar: Cursar):
         conn = db_client()
         cursor = conn.cursor()
         query = """
-            INSERT INTO cursar (usuario_uid, aula_codigo, grupo)
+            INSERT INTO cursar (Uid_usuarios, Nombre_uf, Codigo_aula)
             VALUES (%s, %s, %s)
         """
-        values = (cursar.usuario_uid, cursar.aula_codigo, cursar.grupo)
+        values = (cursar.Uid_usuarios, cursar.Nombre_uf, cursar.Codigo_aula)
         cursor.execute(query, values)
         conn.commit()
     except Exception as e:

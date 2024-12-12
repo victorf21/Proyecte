@@ -2,15 +2,15 @@ from fastapi import APIRouter, HTTPException
 from typing import List
 from pydantic import BaseModel
 from app.database import db_client
-from datetime import datetime, timedelta, time
+from datetime import datetime
 
 router = APIRouter(prefix="/fechas", tags=["Fechas"])
 
 # Modelo para la respuesta
 class Fecha(BaseModel):
-    id: int = None  # El ID es autoincremental, no es necesario al crear
-    fecha: datetime
-    hora: time
+    Fecha_hora: datetime
+    Estado: str  # 'presente', 'retardo', o 'falta'
+    Uid_usuarios: str
 
 # Obtener todas las fechas
 @router.get("/list", response_model=List[Fecha])
@@ -18,19 +18,12 @@ def list_fechas():
     try:
         conn = db_client()
         cursor = conn.cursor(dictionary=True)
-        cursor.execute("SELECT * FROM fecha")
+        cursor.execute("SELECT Fecha_hora, Estado, Uid_usuarios FROM FECHA")
         fechas = cursor.fetchall()
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Error de conexión: {e}")
     finally:
         conn.close()
-
-    # Convertir la hora a tipo `time` si es necesario
-    for fecha in fechas:
-        if isinstance(fecha["hora"], timedelta):  # En caso de que sea timedelta
-            fecha["hora"] = (datetime.min + fecha["hora"]).time()
-        else:
-            fecha["hora"] = fecha["hora"].strftime("%H:%M:%S")  # Formato a string "HH:MM:SS"
 
     return fechas
 
@@ -41,10 +34,10 @@ def create_fecha(fecha: Fecha):
         conn = db_client()
         cursor = conn.cursor()
         query = """
-            INSERT INTO fecha (fecha, hora)
-            VALUES (%s, %s)
+            INSERT INTO FECHA (Fecha_hora, Estado, Uid_usuarios)
+            VALUES (%s, %s, %s)
         """
-        values = (fecha.fecha, fecha.hora)
+        values = (fecha.Fecha_hora, fecha.Estado, fecha.Uid_usuarios)
         cursor.execute(query, values)
         conn.commit()
     except Exception as e:
@@ -52,15 +45,15 @@ def create_fecha(fecha: Fecha):
     finally:
         conn.close()
 
-    return {"message": "Fecha creada correctamente", "fecha": fecha.fecha, "hora": fecha.hora}
+    return {"message": "Fecha creada correctamente", "Fecha_hora": fecha.Fecha_hora, "Estado": fecha.Estado}
 
-# Obtener una fecha específica por ID
-@router.get("/show/{fecha_id}", response_model=Fecha)
-def get_fecha(fecha_id: int):
+# Obtener una fecha específica por Fecha_hora
+@router.get("/show/{Fecha_hora}", response_model=Fecha)
+def get_fecha(Fecha_hora: datetime):
     try:
         conn = db_client()
         cursor = conn.cursor(dictionary=True)
-        cursor.execute("SELECT * FROM fecha WHERE id = %s", (fecha_id,))
+        cursor.execute("SELECT * FROM FECHA WHERE Fecha_hora = %s", (Fecha_hora,))
         fecha = cursor.fetchone()
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Error de conexión: {e}")
@@ -69,11 +62,5 @@ def get_fecha(fecha_id: int):
 
     if not fecha:
         raise HTTPException(status_code=404, detail="Fecha no encontrada")
-
-    # Convertir la hora a tipo `time` si es necesario
-    if isinstance(fecha["hora"], timedelta):  # En caso de que sea timedelta
-        fecha["hora"] = (datetime.min + fecha["hora"]).time()
-    else:
-        fecha["hora"] = fecha["hora"].strftime("%H:%M:%S")  # Formato a string "HH:MM:SS"
 
     return fecha

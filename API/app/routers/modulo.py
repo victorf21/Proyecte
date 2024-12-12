@@ -7,9 +7,8 @@ router = APIRouter(prefix="/modulos", tags=["Módulos"])
 
 # Modelo para la respuesta
 class Modulo(BaseModel):
-    codigo: int
-    nombre: str
-    ufs: int
+    Nombre_modulo: str  
+    Nombre_uf: str  
 
 # Obtener todos los módulos
 @router.get("/list", response_model=List[Modulo])
@@ -17,7 +16,7 @@ def list_modulos():
     try:
         conn = db_client()
         cursor = conn.cursor(dictionary=True)
-        cursor.execute("SELECT * FROM modulo")
+        cursor.execute("SELECT Nombre_modulo, Nombre_uf FROM modulo")
         modulos = cursor.fetchall()
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Error de conexión: {e}")
@@ -33,10 +32,10 @@ def create_modulo(modulo: Modulo):
         conn = db_client()
         cursor = conn.cursor()
         query = """
-            INSERT INTO modulo (codigo, nombre, ufs)
-            VALUES (%s, %s, %s)
+            INSERT INTO modulo (Nombre_modulo, Nombre_uf)
+            VALUES (%s, %s)
         """
-        values = (modulo.codigo, modulo.nombre, modulo.ufs)
+        values = (modulo.Nombre_modulo, modulo.Nombre_uf)
         cursor.execute(query, values)
         conn.commit()
     except Exception as e:
@@ -44,15 +43,15 @@ def create_modulo(modulo: Modulo):
     finally:
         conn.close()
 
-    return {"message": "Módulo creado correctamente", "codigo": modulo.codigo}
+    return {"message": "Módulo creado correctamente", "Nombre_modulo": modulo.Nombre_modulo}
 
-# Obtener un módulo específico por código
-@router.get("/show/{codigo}", response_model=Modulo)
-def get_modulo(codigo: int):
+# Obtener un módulo específico por nombre del módulo
+@router.get("/show/{Nombre_modulo}", response_model=Modulo)
+def get_modulo(Nombre_modulo: str):
     try:
         conn = db_client()
         cursor = conn.cursor(dictionary=True)
-        cursor.execute("SELECT * FROM modulo WHERE codigo = %s", (codigo,))
+        cursor.execute("SELECT Nombre_modulo, Nombre_uf FROM modulo WHERE Nombre_modulo = %s", (Nombre_modulo,))
         modulo = cursor.fetchone()
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Error de conexión: {e}")

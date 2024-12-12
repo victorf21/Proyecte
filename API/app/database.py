@@ -2,7 +2,7 @@ import mysql.connector
 
 def db_client():
     try:
-        dbname = "sistema_ciclos"
+        dbname = "sistema_ciclos3"
         user = "root"
         password = "root"
         host = "localhost"
