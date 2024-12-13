@@ -1,21 +1,20 @@
-import mysql.connector
+import psycopg2
+from psycopg2 import sql
 
 def db_client():
     try:
-        dbname = "sistema_ciclos3"
-        user = "root"
-        password = "root"
-        host = "localhost"
-        port = "3307"
-        collation = "utf8mb4_general_ci"
+        dbname = "sistema_ciclos"
+        user = "web"
+        password = "admin"
+        host = "192.168.34.100"
+        port = "5432"
 
-        conn = mysql.connector.connect(
+        conn = psycopg2.connect(
             host=host,
             port=port,
             user=user,
             password=password,
-            database=dbname,
-            collation=collation
+            database=dbname
         )
         print("Conexió exitosa a la base de dades")
         return conn

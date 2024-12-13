@@ -31,7 +31,7 @@ loginForm.addEventListener("submit", async (event) => {
         localStorage.setItem("rol", data.role);  // Guarda el rol del usuario
         localStorage.setItem("nombre", data.name);  // Guarda el nombre del usuario
         // Redirige a la página de usuario
-        window.location.href = "/WEB/script/user.html"; // Puedes cambiar la URL según tu aplicación
+        window.location.href = "user.html"; // Puedes cambiar la URL según tu aplicación
     } catch (error) {
         console.error("Error al iniciar sesión:", error);
         alert("Error en el servidor, por favor intenta nuevamente.");

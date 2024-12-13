@@ -3,6 +3,7 @@ from typing import List
 from pydantic import BaseModel
 from app.database import db_client
 from fastapi import Query
+from psycopg2.extras import RealDictCursor
 
 router = APIRouter(prefix="/ciclos", tags=["Ciclos"])
 
@@ -19,12 +20,13 @@ class Ciclo(BaseModel):
 def list_ciclos():
     try:
         conn = db_client()
-        cursor = conn.cursor(dictionary=True)
+        cursor = conn.cursor(cursor_factory=RealDictCursor)
         cursor.execute("SELECT * FROM ciclo")
         ciclos = cursor.fetchall()
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Error de conexión a la base de datos: {e}")
     finally:
+        cursor.close()
         conn.close()
     return ciclos
 
@@ -45,6 +47,7 @@ def create_ciclo(ciclo: Ciclo):
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Error de conexión a la base de datos: {e}")
     finally:
+        cursor.close()
         conn.close()
 
     return {"message": "Ciclo creado correctamente", "Codigo_ciclo": ciclo.Codigo_ciclo}
@@ -55,12 +58,13 @@ def create_ciclo(ciclo: Ciclo):
 def get_ciclo(Codigo_ciclo: int):
     try:
         conn = db_client()
-        cursor = conn.cursor(dictionary=True)
+        cursor = conn.cursor(cursor_factory=RealDictCursor)
         cursor.execute("SELECT * FROM ciclo WHERE Codigo_ciclo = %s", (Codigo_ciclo,))
         ciclo = cursor.fetchone()
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Error de conexión a la base de datos: {e}")
     finally:
+        cursor.close()
         conn.close()
 
     if not ciclo:
@@ -86,6 +90,7 @@ def update_ciclo(Codigo_ciclo: int, ciclo: Ciclo):
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Error de conexión a la base de datos: {e}")
     finally:
+        cursor.close()
         conn.close()
 
     if cursor.rowcount == 0:

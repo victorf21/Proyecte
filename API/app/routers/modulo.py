@@ -15,13 +15,18 @@ class Modulo(BaseModel):
 def list_modulos():
     try:
         conn = db_client()
-        cursor = conn.cursor(dictionary=True)
+        if conn is None:
+            raise HTTPException(status_code=500, detail="No se pudo conectar a la base de datos")
+
+        cursor = conn.cursor()
         cursor.execute("SELECT Nombre_modulo, Nombre_uf FROM modulo")
         modulos = cursor.fetchall()
+        cursor.close()
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Error de conexión: {e}")
     finally:
-        conn.close()
+        if conn:
+            conn.close()
 
     return modulos
 
@@ -30,6 +35,9 @@ def list_modulos():
 def create_modulo(modulo: Modulo):
     try:
         conn = db_client()
+        if conn is None:
+            raise HTTPException(status_code=500, detail="No se pudo conectar a la base de datos")
+
         cursor = conn.cursor()
         query = """
             INSERT INTO modulo (Nombre_modulo, Nombre_uf)
@@ -38,10 +46,12 @@ def create_modulo(modulo: Modulo):
         values = (modulo.Nombre_modulo, modulo.Nombre_uf)
         cursor.execute(query, values)
         conn.commit()
+        cursor.close()
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Error de conexión: {e}")
     finally:
-        conn.close()
+        if conn:
+            conn.close()
 
     return {"message": "Módulo creado correctamente", "Nombre_modulo": modulo.Nombre_modulo}
 
@@ -50,13 +60,18 @@ def create_modulo(modulo: Modulo):
 def get_modulo(Nombre_modulo: str):
     try:
         conn = db_client()
-        cursor = conn.cursor(dictionary=True)
+        if conn is None:
+            raise HTTPException(status_code=500, detail="No se pudo conectar a la base de datos")
+
+        cursor = conn.cursor()
         cursor.execute("SELECT Nombre_modulo, Nombre_uf FROM modulo WHERE Nombre_modulo = %s", (Nombre_modulo,))
         modulo = cursor.fetchone()
+        cursor.close()
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Error de conexión: {e}")
     finally:
-        conn.close()
+        if conn:
+            conn.close()
 
     if not modulo:
         raise HTTPException(status_code=404, detail="Módulo no encontrado")

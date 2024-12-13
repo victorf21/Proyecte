@@ -1,8 +1,7 @@
 from fastapi import APIRouter, HTTPException
 from typing import List
 from pydantic import BaseModel
-from app.database import db_client
-
+from app.database import db_client 
 router = APIRouter(prefix="/cursar", tags=["Cursar"])
 
 # Modelo para la respuesta
@@ -16,13 +15,18 @@ class Cursar(BaseModel):
 def list_cursar():
     try:
         conn = db_client()
-        cursor = conn.cursor(dictionary=True)
+        if conn is None:
+            raise HTTPException(status_code=500, detail="No se pudo conectar a la base de datos")
+
+        cursor = conn.cursor()
         cursor.execute("SELECT Uid_usuarios, Codigo_aula, Nombre_uf FROM cursar")
         cursar = cursor.fetchall()
+        cursor.close()
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Error de conexión: {e}")
     finally:
-        conn.close()
+        if conn:
+            conn.close()
 
     return cursar
 
@@ -31,6 +35,9 @@ def list_cursar():
 def create_cursar(cursar: Cursar):
     try:
         conn = db_client()
+        if conn is None:
+            raise HTTPException(status_code=500, detail="No se pudo conectar a la base de datos")
+
         cursor = conn.cursor()
         query = """
             INSERT INTO cursar (Uid_usuarios, Nombre_uf, Codigo_aula)
@@ -39,9 +46,11 @@ def create_cursar(cursar: Cursar):
         values = (cursar.Uid_usuarios, cursar.Nombre_uf, cursar.Codigo_aula)
         cursor.execute(query, values)
         conn.commit()
+        cursor.close()
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Error de conexión: {e}")
     finally:
-        conn.close()
+        if conn:
+            conn.close()
 
     return {"message": "Registro de cursar creado correctamente"}

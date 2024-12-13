@@ -3,6 +3,7 @@ from typing import List
 from pydantic import BaseModel
 from app.database import db_client
 from datetime import datetime
+from psycopg2.extras import RealDictCursor
 
 router = APIRouter(prefix="/pasar_llista", tags=["Pasar Lista"])
 
@@ -16,12 +17,13 @@ class PasarLista(BaseModel):
 def list_pasar_llista():
     try:
         conn = db_client()
-        cursor = conn.cursor(dictionary=True)
+        cursor = conn.cursor(cursor_factory=RealDictCursor)
         cursor.execute("SELECT Uid_usuarios, Fecha_hora FROM pasar_llista")
         pasar_llista = cursor.fetchall()
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Error de conexión: {e}")
     finally:
+        cursor.close()
         conn.close()
 
     return pasar_llista
@@ -42,6 +44,7 @@ def create_pasar_llista(pasar_llista: PasarLista):
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Error de conexión: {e}")
     finally:
+        cursor.close()
         conn.close()
 
     return {"message": "Registro de pasar lista creado correctamente"}

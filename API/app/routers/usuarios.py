@@ -2,6 +2,7 @@ from fastapi import APIRouter, HTTPException
 from typing import List
 from pydantic import BaseModel
 from app.database import db_client
+from psycopg2.extras import RealDictCursor
 
 router = APIRouter(prefix="/usuarios", tags=["Usuarios"])
 
@@ -22,12 +23,13 @@ class LoginRequest(BaseModel):
 def list_usuarios():
     try:
         conn = db_client()
-        cur = conn.cursor(dictionary=True)
+        cur = conn.cursor(cursor_factory=RealDictCursor)
         cur.execute("SELECT Uid_usuarios, email, nombre, contraseña, rol FROM usuarios")
         result = cur.fetchall()
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Error de conexión: {e}")
     finally:
+        cur.close()
         conn.close()
 
     return result
@@ -38,12 +40,13 @@ def list_usuarios():
 def get_usuario(Uid_usuarios: str):
     try:
         conn = db_client()
-        cur = conn.cursor(dictionary=True)
+        cur = conn.cursor(cursor_factory=RealDictCursor)
         cur.execute("SELECT Uid_usuarios, email, nombre, contraseña, rol FROM usuarios WHERE Uid_usuarios = %s", (Uid_usuarios,))
         result = cur.fetchone()
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Error de conexión: {e}")
     finally:
+        cur.close()
         conn.close()
 
     if not result:
@@ -68,6 +71,7 @@ def create_usuario(usuario: Usuario):
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Error de conexión: {e}")
     finally:
+        cur.close()
         conn.close()
 
     return {"message": "Usuario creado correctamente", "Uid_usuarios": usuario.Uid_usuarios}
@@ -80,21 +84,22 @@ def login(credentials: LoginRequest):
     contraseña = credentials.contraseña
     try:
         conn = db_client()
-        cur = conn.cursor(dictionary=True)
+        cur = conn.cursor(cursor_factory=RealDictCursor)
         cur.execute("SELECT * FROM usuarios WHERE email = %s", (email,))
         user = cur.fetchone()
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Error de conexión a la base de datos: {e}")
     finally:
+        cur.close()
         conn.close()
 
     if not user:
         raise HTTPException(status_code=404, detail="Usuario no encontrado")
 
-    if contraseña != user['Contraseña']:
-        raise HTTPException(status_code=401, detail="contraseña incorrecta")
+    if contraseña != user['contraseña']:
+        raise HTTPException(status_code=401, detail="Contraseña incorrecta")
 
-    return {"message": "Inicio de sesión exitoso", "role": user["Rol"], "id": user["Uid_usuarios"], "name": user["Nombre"]}
+    return {"message": "Inicio de sesión exitoso", "role": user["rol"], "id": user["Uid_usuarios"], "name": user["nombre"]}
 
 
 # Ruta para actualizar un usuario
@@ -114,6 +119,7 @@ def update_usuario(Uid_usuarios: str, usuario: Usuario):
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Error de conexión: {e}")
     finally:
+        cur.close()
         conn.close()
 
     if cur.rowcount == 0:
@@ -134,6 +140,7 @@ def delete_usuario(Uid_usuarios: str):
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Error de conexión: {e}")
     finally:
+        cur.close()
         conn.close()
 
     if cur.rowcount == 0:
