@@ -4,23 +4,21 @@ from pydantic import BaseModel
 from app.database import db_client  
 from psycopg2.extras import RealDictCursor
 
-router = APIRouter(prefix="/aulas", tags=["Aulas"])
+router = APIRouter(prefix="/uf", tags=["UF"])
 
-# Definición del modelo de aula
-class Aula(BaseModel):
-    codigo_aula: int
-    nombre: str
+class UF(BaseModel):
+    nombre_uf: str
 
-# Ruta para obtener todas las aulas
-@router.get("/list", response_model=List[Aula])
-def get_aulas():
+# Ruta para obtener todas las UF
+@router.get("/list", response_model=List[UF])
+def get_ufs():
     try:
         conn = db_client()
         if conn is None:
             raise HTTPException(status_code=500, detail="No se pudo conectar a la base de datos")
         cursor = conn.cursor(cursor_factory=RealDictCursor)
-        cursor.execute("SELECT * FROM AULA")
-        aulas = cursor.fetchall()
+        cursor.execute("SELECT * FROM UF")
+        ufs = cursor.fetchall()
         cursor.close()
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Error de conexión a la base de datos: {e}")
@@ -28,14 +26,14 @@ def get_aulas():
         if conn:
             conn.close()
 
-    if not aulas:
-        raise HTTPException(status_code=404, detail="No se encontraron aulas")
+    if not ufs:
+        raise HTTPException(status_code=404, detail="No se encontraron UF")
 
-    return aulas  # FastAPI ahora podrá serializar correctamente
+    return ufs 
 
-# Ruta para obtener una aula específica por su código
-@router.get("/show/{codigo_aula}", response_model=Aula)
-def get_aula(codigo_aula: int):
+# Ruta para obtener una UF por su nombre
+@router.get("/show/{nombre_uf}", response_model=UF)
+def get_uf(nombre_uf: str):
     try:
         conn = db_client()
         if conn is None:
@@ -43,10 +41,10 @@ def get_aula(codigo_aula: int):
 
         cursor = conn.cursor(cursor_factory=RealDictCursor)
         cursor.execute(
-            "SELECT Codigo_aula AS codigo_aula, Nombre AS nombre FROM AULA WHERE Codigo_aula = %s",
-            (codigo_aula,)
+            "SELECT Nombre_uf AS nombre_uf FROM UF WHERE Nombre_uf = %s",
+            (nombre_uf,)
         )
-        aula = cursor.fetchone()
+        uf = cursor.fetchone()
         cursor.close()
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Error de conexión a la base de datos: {e}")
@@ -54,22 +52,22 @@ def get_aula(codigo_aula: int):
         if conn:
             conn.close()
 
-    if not aula:
-        raise HTTPException(status_code=404, detail="Aula no encontrada")
+    if not uf:
+        raise HTTPException(status_code=404, detail="UF no encontrada")
 
-    return aula  # FastAPI ahora podrá serializar correctamente
+    return uf
 
-# Ruta para crear una nueva aula
+# Ruta para crear una nueva UF
 @router.post("/add")
-def add_aula(aula: Aula):
+def add_uf(uf: UF):
     try:
         conn = db_client()
         if conn is None:
             raise HTTPException(status_code=500, detail="No se pudo conectar a la base de datos")
 
         cursor = conn.cursor()
-        query = "INSERT INTO AULA (Codigo_aula, Nombre) VALUES (%s, %s)"
-        values = (aula.codigo_aula, aula.nombre)
+        query = "INSERT INTO UF (Nombre_uf) VALUES (%s)"
+        values = (uf.nombre_uf,)
         cursor.execute(query, values)
         conn.commit()
         cursor.close()
@@ -79,20 +77,24 @@ def add_aula(aula: Aula):
         if conn:
             conn.close()
 
-    return {"message": "Aula creada correctamente", "codigo_aula": aula.codigo_aula}
+    return {"message": "UF creada correctamente", "nombre_uf": uf.nombre_uf}
 
-# Ruta para actualizar una aula existente
-@router.put("/update/{codigo_aula}")
-def update_aula(codigo_aula: int, aula: Aula):
+# Ruta para eliminar una UF por su nombre
+@router.delete("/delete/{nombre_uf}")
+def delete_uf(nombre_uf: str):
     try:
         conn = db_client()
         if conn is None:
             raise HTTPException(status_code=500, detail="No se pudo conectar a la base de datos")
+
         cursor = conn.cursor()
-        query = "UPDATE AULA SET Nombre = %s WHERE Codigo_aula = %s"
-        values = (aula.nombre, codigo_aula)
-        cursor.execute(query, values)
+        query = "DELETE FROM UF WHERE Nombre_uf = %s"
+        cursor.execute(query, (nombre_uf,))
         conn.commit()
+
+        if cursor.rowcount == 0:
+            raise HTTPException(status_code=404, detail="UF no encontrada")
+
         cursor.close()
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Error de conexión a la base de datos: {e}")
@@ -100,7 +102,4 @@ def update_aula(codigo_aula: int, aula: Aula):
         if conn:
             conn.close()
 
-    if cursor.rowcount == 0:
-        raise HTTPException(status_code=404, detail="Aula no encontrada")
-
-    return {"message": "Aula actualizada correctamente", "codigo_aula": codigo_aula}
+    return {"message": f"UF con nombre {nombre_uf} eliminada correctamente"}

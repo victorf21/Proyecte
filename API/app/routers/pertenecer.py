@@ -2,6 +2,7 @@ from fastapi import APIRouter, HTTPException
 from typing import List
 from pydantic import BaseModel
 from app.database import db_client 
+from psycopg2.extras import RealDictCursor
 
 router = APIRouter(prefix="/pertenecer", tags=["Pertenecer"])
 
@@ -18,7 +19,7 @@ def list_pertenecer():
         if conn is None:
             raise HTTPException(status_code=500, detail="No se pudo conectar a la base de datos")
 
-        cursor = conn.cursor()
+        cursor = conn.cursor(cursor_factory=RealDictCursor)
         cursor.execute("SELECT Codigo_ciclo, Nombre_modulo FROM pertenecer")
         pertenecer = cursor.fetchall()
 
@@ -39,7 +40,7 @@ def create_pertenecer(pertenecer: Pertenecer):
         if conn is None:
             raise HTTPException(status_code=500, detail="No se pudo conectar a la base de datos")
 
-        cursor = conn.cursor()
+        cursor = conn.cursor(cursor_factory=RealDictCursor)
         query = """
             INSERT INTO pertenecer (Codigo_ciclo, Nombre_modulo)
             VALUES (%s, %s)
@@ -65,7 +66,7 @@ def get_pertenecer(codigo_ciclo: int, nombre_modulo: str):
         if conn is None:
             raise HTTPException(status_code=500, detail="No se pudo conectar a la base de datos")
 
-        cursor = conn.cursor()
+        cursor = conn.cursor(cursor_factory=RealDictCursor)
         cursor.execute("SELECT Codigo_ciclo, Nombre_modulo FROM pertenecer WHERE Codigo_ciclo = %s AND Nombre_modulo = %s", (codigo_ciclo, nombre_modulo))
         pertenecer = cursor.fetchone()
 

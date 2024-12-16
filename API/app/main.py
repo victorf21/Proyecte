@@ -1,6 +1,6 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from app.routers import usuarios, aulas, modulo, ciclo, fecha, pertenecer, cursar, pasar_lista
+from app.routers import usuarios, aulas, modulo, ciclo, fecha, pertenecer, cursar, pasar_lista, uf
 # python -m uvicorn app.main:app --reload
 app = FastAPI()
 
@@ -22,6 +22,7 @@ app.include_router(fecha.router)
 app.include_router(modulo.router)
 app.include_router(pasar_lista.router)
 app.include_router(pertenecer.router)
+app.include_router(uf.router)
 
 @app.get("/")
 def read_root():

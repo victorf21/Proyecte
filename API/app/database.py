@@ -4,9 +4,9 @@ from psycopg2 import sql
 def db_client():
     try:
         dbname = "sistema_ciclos"
-        user = "web"
-        password = "admin"
-        host = "192.168.34.100"
+        user = "postgres"
+        password = "root"
+        host = "localhost"
         port = "5432"
 
         conn = psycopg2.connect(

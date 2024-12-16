@@ -10,9 +10,9 @@ router = APIRouter(prefix="/ciclos", tags=["Ciclos"])
 
 # Modelo para la respuesta
 class Ciclo(BaseModel):
-    Codigo_ciclo: int
-    Nombre_ciclo: str
-    Grado: int = Query(..., ge=1, le=2, description="El grado debe estar entre 1 y 2")
+    codigo_ciclo: int
+    nombre_ciclo: str
+    grado: int = Query(..., ge=1, le=2, description="El grado debe estar entre 1 y 2")
 
 
 # Obtener todos los ciclos
@@ -38,10 +38,10 @@ def create_ciclo(ciclo: Ciclo):
         conn = db_client()
         cursor = conn.cursor()
         query = """
-            INSERT INTO ciclo (Codigo_ciclo, Nombre_ciclo, Grado)
+            INSERT INTO ciclo (codigo_ciclo, nombre_ciclo, grado)
             VALUES (%s, %s, %s)
         """
-        values = (ciclo.Codigo_ciclo, ciclo.Nombre_ciclo, ciclo.Grado)
+        values = (ciclo.codigo_ciclo, ciclo.nombre_ciclo, ciclo.grado)
         cursor.execute(query, values)
         conn.commit()
     except Exception as e:
@@ -50,16 +50,16 @@ def create_ciclo(ciclo: Ciclo):
         cursor.close()
         conn.close()
 
-    return {"message": "Ciclo creado correctamente", "Codigo_ciclo": ciclo.Codigo_ciclo}
+    return {"message": "Ciclo creado correctamente", "codigo_ciclo": ciclo.codigo_ciclo}
 
 
 # Obtener un ciclo específico por código
-@router.get("/show/{Codigo_ciclo}", response_model=Ciclo)
-def get_ciclo(Codigo_ciclo: int):
+@router.get("/show/{codigo_ciclo}", response_model=Ciclo)
+def get_ciclo(codigo_ciclo: int):
     try:
         conn = db_client()
         cursor = conn.cursor(cursor_factory=RealDictCursor)
-        cursor.execute("SELECT * FROM ciclo WHERE Codigo_ciclo = %s", (Codigo_ciclo,))
+        cursor.execute("SELECT * FROM ciclo WHERE codigo_ciclo = %s", (codigo_ciclo,))
         ciclo = cursor.fetchone()
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Error de conexión a la base de datos: {e}")
@@ -74,17 +74,17 @@ def get_ciclo(Codigo_ciclo: int):
 
 
 # Actualizar un ciclo existente
-@router.put("/update/{Codigo_ciclo}")
-def update_ciclo(Codigo_ciclo: int, ciclo: Ciclo):
+@router.put("/update/{codigo_ciclo}")
+def update_ciclo(codigo_ciclo: int, ciclo: Ciclo):
     try:
         conn = db_client()
         cursor = conn.cursor()
         query = """
             UPDATE ciclo
-            SET Nombre_ciclo = %s, Grado = %s
-            WHERE Codigo_ciclo = %s
+            SET nombre_ciclo = %s, grado = %s
+            WHERE codigo_ciclo = %s
         """
-        values = (ciclo.Nombre_ciclo, ciclo.Grado, Codigo_ciclo)
+        values = (ciclo.nombre_ciclo, ciclo.grado, codigo_ciclo)
         cursor.execute(query, values)
         conn.commit()
     except Exception as e:
@@ -96,4 +96,4 @@ def update_ciclo(Codigo_ciclo: int, ciclo: Ciclo):
     if cursor.rowcount == 0:
         raise HTTPException(status_code=404, detail="Ciclo no encontrado")
 
-    return {"message": "Ciclo actualizado correctamente", "Codigo_ciclo": Codigo_ciclo}
+    return {"message": "Ciclo actualizado correctamente", "codigo_ciclo": codigo_ciclo}

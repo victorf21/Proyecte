@@ -8,7 +8,7 @@ router = APIRouter(prefix="/usuarios", tags=["Usuarios"])
 
 
 class Usuario(BaseModel):
-    Uid_usuarios: str
+    uid_usuarios: str
     email: str
     nombre: str
     contraseña: str
@@ -24,7 +24,7 @@ def list_usuarios():
     try:
         conn = db_client()
         cur = conn.cursor(cursor_factory=RealDictCursor)
-        cur.execute("SELECT Uid_usuarios, email, nombre, contraseña, rol FROM usuarios")
+        cur.execute("SELECT * FROM usuarios")
         result = cur.fetchall()
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Error de conexión: {e}")
@@ -35,13 +35,13 @@ def list_usuarios():
     return result
 
 
-# Ruta para obtener un usuario por Uid_usuarios
-@router.get("/show/{Uid_usuarios}", response_model=Usuario)
-def get_usuario(Uid_usuarios: str):
+# Ruta para obtener un usuario por uid_usuarios
+@router.get("/show/{uid_usuarios}", response_model=Usuario)
+def get_usuario(uid_usuarios: str):
     try:
         conn = db_client()
         cur = conn.cursor(cursor_factory=RealDictCursor)
-        cur.execute("SELECT Uid_usuarios, email, nombre, contraseña, rol FROM usuarios WHERE Uid_usuarios = %s", (Uid_usuarios,))
+        cur.execute("SELECT uid_usuarios, email, nombre, contraseña, rol FROM usuarios WHERE uid_usuarios = %s", (uid_usuarios,))
         result = cur.fetchone()
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Error de conexión: {e}")
@@ -62,10 +62,10 @@ def create_usuario(usuario: Usuario):
         conn = db_client()
         cur = conn.cursor()
         query = """
-            INSERT INTO usuarios (Uid_usuarios, email, nombre, contraseña, rol)
+            INSERT INTO usuarios (uid_usuarios, email, nombre, contraseña, rol)
             VALUES (%s, %s, %s, %s, %s)
         """
-        values = (usuario.Uid_usuarios, usuario.email, usuario.nombre, usuario.contraseña, usuario.rol)
+        values = (usuario.uid_usuarios, usuario.email, usuario.nombre, usuario.contraseña, usuario.rol)
         cur.execute(query, values)
         conn.commit()
     except Exception as e:
@@ -74,7 +74,7 @@ def create_usuario(usuario: Usuario):
         cur.close()
         conn.close()
 
-    return {"message": "Usuario creado correctamente", "Uid_usuarios": usuario.Uid_usuarios}
+    return {"message": "Usuario creado correctamente", "uid_usuarios": usuario.uid_usuarios}
 
 
 # Ruta para iniciar sesión
@@ -99,21 +99,21 @@ def login(credentials: LoginRequest):
     if contraseña != user['contraseña']:
         raise HTTPException(status_code=401, detail="Contraseña incorrecta")
 
-    return {"message": "Inicio de sesión exitoso", "role": user["rol"], "id": user["Uid_usuarios"], "name": user["nombre"]}
+    return {"message": "Inicio de sesión exitoso", "role": user["rol"], "id": user["uid_usuarios"], "name": user["nombre"]}
 
 
 # Ruta para actualizar un usuario
-@router.put("/update/{Uid_usuarios}")
-def update_usuario(Uid_usuarios: str, usuario: Usuario):
+@router.put("/update/{uid_usuarios}")
+def update_usuario(uid_usuarios: str, usuario: Usuario):
     try:
         conn = db_client()
         cur = conn.cursor()
         query = """
             UPDATE usuarios 
             SET email = %s, nombre = %s, contraseña = %s, rol = %s
-            WHERE Uid_usuarios = %s
+            WHERE uid_usuarios = %s
         """
-        values = (usuario.email, usuario.nombre, usuario.contraseña, usuario.rol, Uid_usuarios)
+        values = (usuario.email, usuario.nombre, usuario.contraseña, usuario.rol, uid_usuarios)
         cur.execute(query, values)
         conn.commit()
     except Exception as e:
@@ -125,17 +125,17 @@ def update_usuario(Uid_usuarios: str, usuario: Usuario):
     if cur.rowcount == 0:
         raise HTTPException(status_code=404, detail="Usuario no encontrado")
 
-    return {"message": "Usuario actualizado correctamente", "Uid_usuarios": Uid_usuarios}
+    return {"message": "Usuario actualizado correctamente", "uid_usuarios": uid_usuarios}
 
 
 # Ruta para eliminar un usuario
-@router.delete("/delete/{Uid_usuarios}")
-def delete_usuario(Uid_usuarios: str):
+@router.delete("/delete/{uid_usuarios}")
+def delete_usuario(uid_usuarios: str):
     try:
         conn = db_client()
         cur = conn.cursor()
-        query = "DELETE FROM usuarios WHERE Uid_usuarios = %s"
-        cur.execute(query, (Uid_usuarios,))
+        query = "DELETE FROM usuarios WHERE uid_usuarios = %s"
+        cur.execute(query, (uid_usuarios,))
         conn.commit()
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Error de conexión: {e}")
@@ -146,4 +146,4 @@ def delete_usuario(Uid_usuarios: str):
     if cur.rowcount == 0:
         raise HTTPException(status_code=404, detail="Usuario no encontrado")
 
-    return {"message": "Usuario eliminado correctamente", "Uid_usuarios": Uid_usuarios}
+    return {"message": "Usuario eliminado correctamente", "uid_usuarios": uid_usuarios}

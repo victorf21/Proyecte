@@ -2,13 +2,15 @@ from fastapi import APIRouter, HTTPException
 from typing import List
 from pydantic import BaseModel
 from app.database import db_client 
+from psycopg2.extras import RealDictCursor
+
 router = APIRouter(prefix="/cursar", tags=["Cursar"])
 
 # Modelo para la respuesta
 class Cursar(BaseModel):
-    Uid_usuarios: str
-    Nombre_uf: str
-    Codigo_aula: int
+    uid_usuarios: str
+    nombre_uf: str
+    codigo_aula: int
 
 # Obtener todos los registros de cursar
 @router.get("/list", response_model=List[Cursar])
@@ -18,8 +20,8 @@ def list_cursar():
         if conn is None:
             raise HTTPException(status_code=500, detail="No se pudo conectar a la base de datos")
 
-        cursor = conn.cursor()
-        cursor.execute("SELECT Uid_usuarios, Codigo_aula, Nombre_uf FROM cursar")
+        cursor = conn.cursor(cursor_factory=RealDictCursor)
+        cursor.execute("SELECT uid_usuarios, codigo_aula, nombre_uf FROM cursar")
         cursar = cursor.fetchall()
         cursor.close()
     except Exception as e:
@@ -38,12 +40,12 @@ def create_cursar(cursar: Cursar):
         if conn is None:
             raise HTTPException(status_code=500, detail="No se pudo conectar a la base de datos")
 
-        cursor = conn.cursor()
+        cursor = conn.cursor(cursor_factory=RealDictCursor)
         query = """
-            INSERT INTO cursar (Uid_usuarios, Nombre_uf, Codigo_aula)
+            INSERT INTO cursar (uid_usuarios, nombre_uf, codigo_aula)
             VALUES (%s, %s, %s)
         """
-        values = (cursar.Uid_usuarios, cursar.Nombre_uf, cursar.Codigo_aula)
+        values = (cursar.uid_usuarios, cursar.nombre_uf, cursar.codigo_aula)
         cursor.execute(query, values)
         conn.commit()
         cursor.close()
