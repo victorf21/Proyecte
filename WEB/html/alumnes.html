@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Llista</title>
+    <link rel="stylesheet" href="/style/professor.css">
+</head>
+<body>
+    <header class="navbar">
+        <div class="logo">
+            <img src="/imagenes/logo-itic.png" alt="Logo" onclick="window.location.href='user.html'">
+            <h1 id="header-usuario"></h1>
+            
+            <button id="logout-button">Tancar la sessió</button>
+        </div>
+        <nav class="menu"></nav>
+    </header>
+    
+    <main class="alumnes-section">
+        <h1 id="ciclo-modulo"></h1> <!-- Este es el h1 que contendrá el ciclo y módulo -->
+
+        <!-- Textos 'Present', 'Retard', 'Abscent' encima de los checkboxes -->
+        <div class="checkboxes-header">
+            <div>Alumnes: </div><br><div>Present</div><div>Retard</div><div>Abscent</div>
+        </div>
+
+        <!-- Aquí se generará dinámicamente la lista de alumnos -->
+        <div id="alumnos-list"></div>
+
+        <!-- Botón para ir a la página de gráficas -->
+        <button id="graficas-button" class="graficas-button" onclick="window.location.href='grafiques.html'">Grafiques adicionals</button>
+    </main>
+
+    <script src="/script/alumnes.js"></script>
+</body>
+</html>

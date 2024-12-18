@@ -14,20 +14,67 @@ body {
 
 /* Header */
 header {
-    background-color: #2c6e68;
+    display: flex;
+    flex-direction: column; 
     padding: 20px;
+    background-color: #2c6e68;
     color: white;
-    font-size: 24px;
     font-weight: bold;
+}
+
+.logo {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    width: 100%; 
+    padding: 0 20px; 
+}
+
+.logo img {
+    height: 80px; /* Tamaño del logo */
+    cursor: pointer;
+}
+
+#header-usuario {
+    flex-grow: 1; 
+    text-align: center;
+    margin: 0;
+}
+
+/* Botón de cerrar sesión */
+#logout-button {
+    padding: 10px 20px;
+    font-size: 16px;
+    font-weight: bold;
+    background-color: #2c6e68;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+#logout-button:hover {
+    background-color: #1e4f4d;
+}
+
+/* Menú */
+nav {
+    margin-top: 20px;
+    width: 100%;
+    text-align: center; 
 }
 
 nav ul {
     list-style: none;
-    display: flex;
-    justify-content: center;
+    display: inline-block;
     gap: 30px;
     padding: 0;
     margin: 0;
+}
+
+nav ul li {
+    display: inline-block; 
 }
 
 nav ul li a {
@@ -35,7 +82,7 @@ nav ul li a {
     color: white;
     font-size: 18px;
     font-weight: bold;
-    padding: 20px 30px;
+    padding: 10px 20px;
 }
 
 nav ul li a:hover {
@@ -65,5 +112,314 @@ nav ul li a:hover {
     border: none;
     border-radius: 10px;
     cursor: pointer;
-    transition: background-color 0.3s, transform 0.2s;
+}
+
+.aula-button:hover {
+    background-color: #1e4f4d;
+}
+
+/* Welcome Section */
+.welcome-section {
+    text-align: center;
+    margin-top: 100px;
+}
+
+.welcome-section h1 {
+    font-size: 36px;
+    margin-bottom: 20px;
+}
+
+/* Ciclo módulo */
+#ciclo-modulo {
+    margin-top: 10px;
+}
+
+/* Sección de Alumnes */
+.alumnes-section {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    margin: 10px;
+    padding: 20px;
+}
+
+/* Contenedor principal de la lista */
+.alumno-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 400px; /* Mismo ancho que checkboxes-header */
+}
+
+
+.alumno-item span {
+    background-color: #2c6e68;
+    color: white;
+    padding: 10px;
+    flex-grow: 1; 
+    text-align: left;
+}
+
+/* Encabezado Present, Retard, Absent */
+.checkboxes-header {
+    display: flex;
+    justify-content: space-between;
+    width: 400px; /* Mismo ancho que alum-itm */
+    font-weight: bold;
+    color: #000;
+    margin-bottom: 10px;
+    text-align: center;
+    margin-top: 15px;
+}
+
+.checkboxes-container {
+    display: flex;
+    justify-content: space-around;
+    width: 250px;
+    gap: 10px;
+}
+
+.checkboxes-container input {
+    appearance: none;
+    width: 20px;
+    height: 20px;
+    border: 2px solid #c7c7c7;
+    border-radius: 4px; 
+    cursor: pointer;
+}
+
+.checkboxes-container input:checked {
+    border: none;
+    position: relative;
+}
+
+.checkboxes-container input:checked::after {
+    content: "✔";
+    color: white;
+    font-size: 14px;
+    position: absolute;
+    left: 3px;
+    top: -1px;
+}
+
+/* Colores específicos */
+.present:checked {
+    background-color: #5d9899; 
+}
+
+.retard:checked {
+    background-color: #f2d763; 
+}
+
+.absent:checked {
+    background-color: #85301c; 
+}
+
+
+/* Botón Ver Gráficas */
+.graficas-button {
+    margin-top: 20px; 
+    padding: 15px 30px; 
+    font-size: 18px;
+    font-weight: bold;
+    color: white;
+    background-color: #2c6e68; 
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.graficas-button:hover {
+    background-color: #1e4f4d;
+}
+
+/* Grafiques - section */
+.graficas-section {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    margin: 10px;
+    padding: 20px;
+    max-width: 100%;
+}
+
+/* Imagen dentro del contenedor */
+.image-container {
+    margin: 20px auto; /* Centrar la imagen */
+    text-align: center;
+}
+
+.grafica-imagen {
+    max-width: 100%; /* Adaptar a pantalla */
+    height: 300px; /* Mantener proporciones */
+}
+
+/* Contenedor de UF */
+.ufs-container {
+    display: flex;
+    justify-content: space-around; /* Espacio uniforme entre elementos */
+    align-items: center;
+    margin-top: 20px;
+    padding: 10px;
+}
+
+/* Estilo para cada caja */
+.uf-box {
+    flex: 1; 
+    max-width: 150px;
+    padding: 10px;
+    margin: 0 10px; 
+    text-align: center;
+    font-weight: bold;
+    border-radius: 5px;
+}
+
+/* Colores específicos para cada div */
+.uf-present {
+    background-color: #5d9899; 
+    color: white;
+}
+
+.uf-retard {
+    background-color: #f2d763; 
+    color: white;
+}
+
+.uf-falta {
+    background-color: #85301c; 
+    color: white;
+}
+
+/* Tabla horari */
+table {
+    width: 80%;  /* Ancho ajustado a un 80% de la pantalla */
+    max-width: 1200px; /* Ancho máximo para la tabla */
+    margin: 20px auto; /* Centrar la tabla en la página */
+    border-collapse: collapse;
+}
+
+th, td {
+    border: 1px solid #000;
+    text-align: center;
+    padding: 10px;
+}
+td{
+    padding: 0%;
+}
+th {
+    background-color: #2c6e68;
+    color: #ffffff;
+}
+
+td {
+    height: 50px;
+}
+
+/* Estilo para los inputs de la tabla */
+.input-cell {
+    width: 100%; /* Hace que el input ocupe todo el ancho de la celda */
+    height: 100%; /* Hace que el input ocupe toda la altura de la celda */
+    padding: 0; /* Elimina el padding para que se ajuste mejor */
+    font-size: 14px; /* Tamaño del texto */
+    border: 1px solid white; /* Bordes suaves */
+    /* Asegura que el padding no afecte al tamaño total del input */
+    text-align: center; /* Centra el texto dentro del input */
+}
+
+.input-cell:focus {
+    outline: none;
+}
+
+.calendario-section{
+    margin-top: 20px;
+}
+
+/* Modulo Container */
+#modulo-container {
+    margin: 40px auto;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 20px;
+    padding: 20px;
+    max-width: 600px;
+}
+
+.modulo-button {
+    width: 500px;
+    padding: 15px;
+    text-align: center;
+    font-size: 18px;
+    font-weight: bold;
+    color: white;
+    background-color: #2c6e68;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+}
+
+.modulo-button:hover {
+    background-color: #1e4f4d;
+}
+
+/* Estilos para el input y botón */
+.input-button-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 20px auto;
+    gap: 10px;
+    max-width: 500px;
+}
+
+.input-button-container input {
+    padding: 10px;
+    width: 70%;
+    font-size: 16px;
+    border: 1px solid #c7c7c7;
+    border-radius: 5px;
+}
+
+.input-button-container button {
+    padding: 10px 20px;
+    font-size: 16px;
+    background-color: #2c6e68;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.input-button-container button:hover {
+    background-color: #1e4f4d;
+}
+
+/* Aula Container */
+#ufs-container {
+    margin: 40px auto;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 20px;
+    padding: 20px;
+    max-width: 400px;
+}
+
+.uf-button {
+    width: 300px;
+    padding: 15px;
+    text-align: center;
+    font-size: 18px;
+    font-weight: bold;
+    color: white;
+    background-color: #2c6e68;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+}
+
+.uf-button:hover {
+    background-color: #1e4f4d;
 }

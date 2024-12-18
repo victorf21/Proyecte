@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Inici</title>
+    <title>Grafiques</title>
     <link rel="stylesheet" href="/style/professor.css">
 </head>
 <body>
@@ -15,14 +15,19 @@
         </div>
         <nav class="menu"></nav>
     </header>
-    
-    <main class="welcome-section">
-        <br>
-        <h1>Benvingut: </h1> 
-        <br>
-        <h1><span id="user-name"></span></h1> 
+    <main class="graficas-section">
+        <h1 id="uf-modulo"></h1>
+        <div class="image-container">
+            <img src="/imagenes/image.png" alt="Imagen gráfica" class="grafica-imagen">
+        </div>
+
+        <div class="ufs-container">
+            <div class="uf-box uf-present">Present el 65% del mòdul</div>
+            <div class="uf-box uf-retard">Retard el 20% del mòdul</div>
+            <div class="uf-box uf-falta">Falta el 15% del mòdul</div>
+        </div>
     </main>
 
-    <script src="/script/user.js"></script>
+    <script src="/script/graficasalumne.js"></script>
 </body>
 </html>

@@ -14,15 +14,11 @@ document.addEventListener('DOMContentLoaded', function () {
 
     const role = user.role; // Recuperamos el rol del usuario desde localStorage
 
-    if(role === "alumno"){
-        document.getElementById('user-name').textContent = "Alumne: " + user.name;
+    if (role === "alumno") {
         document.getElementById('header-usuario').textContent = "Alumne: " + user.name;
-    }else if (role === "profesor"){
-        document.getElementById('user-name').textContent = "Professor: " + user.name;
+    } else if (role === "profesor") {
         document.getElementById('header-usuario').textContent = "Professor: " + user.name;
-
     }
-    // Mostrar el nombre del usuario en el HTML
 
     if (role === "alumno") {
         navMenu.innerHTML = `
@@ -45,11 +41,20 @@ document.addEventListener('DOMContentLoaded', function () {
         window.location.href = "index.html";
     }
 
+    // Mostrar el módulo seleccionado en el encabezado uf-modulo
+    const ufModuloContainer = document.querySelector("#uf-modulo");
+    const nombre_modulo = localStorage.getItem('nombre_modulo');
+    const nombre_uf = localStorage.getItem('nombre_uf');
+
+    if (nombre_modulo && nombre_uf) {
+        ufModuloContainer.textContent = `${nombre_modulo} - ${nombre_uf}`;
+    } else {
+        ufModuloContainer.textContent = "No se ha seleccionado un módulo.";
+    }
+
+    // Botón de logout
     document.getElementById("logout-button").addEventListener("click", () => {
-        // Eliminar los datos de localStorage
-        localStorage.clear();
-    
-        // Redirigir al inicio de sesión
-        window.location.href = "index.html";
+        localStorage.clear(); // Eliminar los datos del localStorage
+        window.location.href = "index.html"; // Redirigir al inicio de sesión
     });
 });

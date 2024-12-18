@@ -1,5 +1,5 @@
 document.addEventListener("DOMContentLoaded", async () => {
-    const aulaContainer = document.querySelector("#aula-container");
+    const moduloContainer = document.querySelector("#modulo-container");
 
     // Obtener el rol del usuario desde el localStorage
     const user = JSON.parse(localStorage.getItem('user'));
@@ -37,29 +37,29 @@ document.addEventListener("DOMContentLoaded", async () => {
     }
 
     try {
-        const response = await fetch("http://127.0.0.1:8000/aulas/list");
+        const response = await fetch("http://127.0.0.1:8000/modulos/list");
         if (!response.ok) {
-            throw new Error("Error al obtener las aulas");
+            throw new Error("Error al obtener las modulos");
         }
 
-        const aulas = await response.json();
-        console.log(aulas)
+        const modulos = await response.json();
+        console.log(modulos)
 
-        // Crear un botón por cada aula
-        aulas.forEach(aula => {
+        // Crear un botón por cada modulo
+        modulos.forEach(modulo => {
             const button = document.createElement("button");
-            button.classList.add("aula-button");
-            button.textContent = aula.nombre; // Texto del botón con el nombre del aula
-            button.dataset.codigo = aula.codigo; // Código del aula como atributo de datos
-            aulaContainer.appendChild(button);
+            button.classList.add("modulo-button");
+            button.textContent = modulo.nombre_modulo; // Texto del botón con el nombre del modulo
+            moduloContainer.appendChild(button);
 
             // Evento para cada botón
             button.addEventListener("click", () => {
-                window.location.href = `modulos.html?aula=${aula.codigo}`;
+                localStorage.setItem('nombre_modulo', modulo.nombre_modulo);
+                window.location.href = "ufs.html";
             });
         });
     } catch (error) {
-        console.error("Error al cargar las aulas:", error);
+        console.error("Error al cargar las modulos:", error);
     }
 
     document.getElementById("logout-button").addEventListener("click", () => {

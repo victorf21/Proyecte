@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Grafiques</title>
+    <link rel="stylesheet" href="/style/professor.css">
+</head>
+<body>
+    <header class="navbar">
+        <div class="logo">
+            <img src="/imagenes/logo-itic.png" alt="Logo" onclick="window.location.href='user.html'">
+            <h1 id="header-usuario"></h1>
+            <button id="logout-button">Tancar la sessió</button>
+        </div>
+        <nav class="menu"></nav>
+    </header>
+    <main class="graficas-section">
+        <h1 id="ciclo-modulo">Ciclo y Módulo</h1>
+        <div class="image-container">
+            <img src="/imagenes/image.png" alt="Imagen gráfica" class="grafica-imagen">
+        </div>
+
+        <div class="ufs-container">
+            <div class="uf-box uf-present">Present el 65% del mòdul</div>
+            <div class="uf-box uf-retard">Retard el 20% del mòdul</div>
+            <div class="uf-box uf-falta">Falta el 15% del mòdul</div>
+        </div>
+    </main>
+
+    <script src="/script/graficas.js"></script>
+</body>
+</html>

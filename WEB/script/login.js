@@ -1,39 +1,57 @@
-const loginForm = document.querySelector("form");
+document.addEventListener('DOMContentLoaded', function () {
+    // Obtener referencias al formulario y sus campos
+    const loginForm = document.querySelector('.login-form');
+    const emailInput = document.getElementById('email');
+    const passwordInput = document.getElementById('password');
+    
+    // Evento para manejar el envío del formulario
+    loginForm.addEventListener('submit', async function (event) {
+        event.preventDefault(); // Evitar el envío tradicional del formulario
+        
+        // Obtener los valores de los campos del formulario
+        const email = emailInput.value;
+        const password = passwordInput.value;
+        
+        // Crear el objeto de credenciales
+        const credentials = {
+            email: email,
+            contraseña: password
+        };
+        
+        try {
+            // Realizar la solicitud POST a la API de inicio de sesión
+            const response = await fetch('http://127.0.0.1:8000/usuarios/login', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(credentials),
+            });
+            
+            // Manejo de la respuesta
+            if (response.ok) {
+                // Si la respuesta es exitosa, procesar la respuesta JSON
+                const data = await response.json();
+                console.log('Login exitoso:', data);
+                
+                // Guardar los datos en localStorage
+                localStorage.setItem('user', JSON.stringify({
+                    role: data.role,
+                    id: data.id,
+                    name: data.name
+                }));
 
-loginForm.addEventListener("submit", async (event) => {
-    event.preventDefault();
-
-    // Obtén los valores de email y contraseña
-    const email = document.querySelector("#email").value;
-    const contraseña = document.querySelector("#password").value;
-
-    try {
-        // Enviamos la solicitud POST al backend
-        const response = await fetch("http://localhost:8000/usuarios/login", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ email, contraseña }), // Enviamos los valores como JSON
-        });
-
-        // Si la respuesta no es OK, mostrar el error
-        if (!response.ok) {
-            const errorData = await response.json();
-            alert(errorData.detail);  // Muestra el mensaje de error
-            return;
+                // Redirigir al usuario a user.html
+                window.location.href = 'user.html'; // Reemplaza esto con la ruta correcta si es necesario
+            } else {
+                // Si la respuesta no es exitosa, obtener y mostrar el mensaje de error
+                const errorData = await response.text(); // Leer el error como texto
+                alert('Error en el inicio de sesión: ' + errorData);
+            }
+        } catch (error) {
+            // Manejo de errores en caso de problemas con la conexión o la solicitud
+            console.error('Error de conexión:', error);
+            alert('Hubo un problema al intentar iniciar sesión. Inténtalo de nuevo.');
         }
-
-        // Si la respuesta es exitosa, obtenemos los datos del usuario
-        const data = await response.json();
-        console.log(data);
-
-        // Guardamos el ID y el rol en el localStorage
-        localStorage.setItem("Uid_usuarios", data.id);  // Guarda el ID del usuario
-        localStorage.setItem("rol", data.role);  // Guarda el rol del usuario
-        localStorage.setItem("nombre", data.name);  // Guarda el nombre del usuario
-        // Redirige a la página de usuario
-        window.location.href = "user.html"; // Puedes cambiar la URL según tu aplicación
-    } catch (error) {
-        console.error("Error al iniciar sesión:", error);
-        alert("Error en el servidor, por favor intenta nuevamente.");
-    }
+    });
 });

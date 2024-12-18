@@ -12,36 +12,84 @@ body {
     text-align: center;
 }
 
-/* Header - Común entre las pantallas */
+/* Header */
 header {
+    display: flex;
+    flex-direction: column; 
+    padding: 20px;
     background-color: #2c6e68;
-    padding: 20px 0;
     color: white;
     font-size: 24px;
     font-weight: bold;
 }
 
+.logo {
+    display: flex; 
+    align-items: center;
+    justify-content: space-between; 
+    position: relative; 
+    gap: 10px; 
+}
+
 .logo img {
     height: 80px;
+    position: absolute; 
+    left: 0; 
+    cursor: pointer;
 }
 
-.menu {
-    display: flex;
-    gap: 20px;
+#header-usuario {
+    flex-grow: 1;
+    text-align: center; 
 }
 
-.menu a {
+/* Botón de cerrar sesión */
+#logout-button {
+    padding: 10px 15px;
+    font-size: 16px;
+    font-weight: bold;
+    background-color: #2c6e68;
+    color: white;
+    border-width: 2px;
+    border-color: #000000;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+#logout-button:hover {
+    background-color: #1e4a47;
+}
+
+/* Menú */
+nav {
+    margin-top: 20px;
+    width: 100%;
+    text-align: center; 
+}
+
+nav ul {
+    list-style: none;
+    display: inline-block;
+    gap: 30px;
+    padding: 0;
+    margin: 0;
+}
+
+nav ul li {
+    display: inline-block; 
+}
+
+nav ul li a {
     text-decoration: none;
     color: white;
+    font-size: 18px;
     font-weight: bold;
     padding: 10px 20px;
-    border: 1px solid transparent;
-    border-radius: 4px;
 }
 
-.menu a:hover {
+nav ul li a:hover {
     background-color: #1e4f4d;
-    border: 1px solid white;
+    color: #f8f8f8;
 }
 
 /* Main Content Styles */
@@ -100,17 +148,3 @@ header {
     text-decoration: underline;
 }
 
-/* Welcome Section */
-.welcome-section {
-    text-align: center;
-    margin-top: 100px;
-}
-
-.welcome-section h1 {
-    font-size: 36px;
-    margin-bottom: 20px;
-}
-
-.professor {
-    font-size: 20px;
-}

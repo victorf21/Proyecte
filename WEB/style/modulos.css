@@ -1,0 +1,141 @@
+/* Global Reset */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f8f8f8;
+    color: #000000;
+    text-align: center;
+}
+
+/* Header */
+header {
+    display: flex;
+    flex-direction: column;
+    padding: 20px;
+    background-color: #2c6e68;
+    color: white;
+    font-weight: bold;
+}
+
+.logo {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    width: 100%;
+    padding: 0 20px;
+}
+
+.logo img {
+    height: 80px; /* Tamaño del logo */
+    cursor: pointer;
+}
+
+#header-usuario {
+    flex-grow: 1;
+    text-align: center;
+    margin: 0;
+}
+
+/* Botón de cerrar sesión */
+#logout-button {
+    padding: 10px 20px;
+    font-size: 16px;
+    font-weight: bold;
+    background-color: #2c6e68;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+#logout-button:hover {
+    background-color: #1e4f4d;
+}
+
+/* Menú */
+nav {
+    margin-top: 20px;
+    width: 100%;
+    text-align: center;
+}
+
+nav ul {
+    list-style: none;
+    display: inline-block;
+    gap: 30px;
+    padding: 0;
+    margin: 0;
+}
+
+nav ul li {
+    display: inline-block;
+}
+
+nav ul li a {
+    text-decoration: none;
+    color: white;
+    font-size: 18px;
+    font-weight: bold;
+    padding: 10px 20px;
+}
+
+nav ul li a:hover {
+    background-color: #1e4f4d;
+    color: #f8f8f8;
+}
+
+/* Estilo para la sección de ciclos */
+.ciclos {
+    display: flex;
+    flex-direction: column; 
+    align-items: center; 
+    justify-content: center; 
+    height: 500px;
+}
+
+/* Estilo para los desplegables */
+select {
+    font-size: 16px;
+    padding: 10px 20px;
+    margin: 10px 0;
+    border: 2px solid #2c6e68;
+    border-radius: 5px;
+    background-color: #ffffff;
+    color: #2c6e68;
+    width: 224px;
+    cursor: pointer;
+}
+
+select:hover {
+    background-color: #f0f0f0;
+}
+
+/* Estilo para las opciones dentro de los desplegables */
+option {
+    font-size: 16px;
+    padding: 10px;
+    background-color: #ffffff;
+    color: #2c6e68;
+}
+
+/* Estilo para el botón */
+#go-button {
+    font-size: 16px;
+    padding: 10px 20px;
+    margin: 10px 0;
+    border-radius: 5px;
+    background-color: #000000;
+    color: #ffffff;
+    width: 224px; 
+    cursor: pointer;
+}
+
+#go-button:hover {
+    background-color: #505050;
+}

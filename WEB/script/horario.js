@@ -1,19 +1,26 @@
-document.addEventListener("DOMContentLoaded", async () => {
-    const aulaContainer = document.querySelector("#aula-container");
-
-    // Obtener el rol del usuario desde el localStorage
+document.addEventListener('DOMContentLoaded', function () {
+    // Recuperar la información del usuario desde localStorage
     const user = JSON.parse(localStorage.getItem('user'));
+
+    // Si no se encuentra la información del usuario, redirigir al login
+    if (!user || !user.id) {
+        alert('No se ha encontrado información del usuario.');
+        window.location.href = 'index.html';
+        return;
+    }
 
     // Crear el menú de navegación basado en el rol del usuario
     const navMenu = document.querySelector('.menu'); // Asegúrate de que el selector sea correcto
 
     const role = user.role; // Recuperamos el rol del usuario desde localStorage
-    
+
     if(role === "alumno"){
         document.getElementById('header-usuario').textContent = "Alumne: " + user.name;
     }else if (role === "profesor"){
         document.getElementById('header-usuario').textContent = "Professor: " + user.name;
+
     }
+    // Mostrar el nombre del usuario en el HTML
 
     if (role === "alumno") {
         navMenu.innerHTML = `
@@ -34,32 +41,6 @@ document.addEventListener("DOMContentLoaded", async () => {
         // Si el rol no es reconocido, redirigir al login
         alert("Rol no reconocido. Redirigiendo al inicio de sesión...");
         window.location.href = "index.html";
-    }
-
-    try {
-        const response = await fetch("http://127.0.0.1:8000/aulas/list");
-        if (!response.ok) {
-            throw new Error("Error al obtener las aulas");
-        }
-
-        const aulas = await response.json();
-        console.log(aulas)
-
-        // Crear un botón por cada aula
-        aulas.forEach(aula => {
-            const button = document.createElement("button");
-            button.classList.add("aula-button");
-            button.textContent = aula.nombre; // Texto del botón con el nombre del aula
-            button.dataset.codigo = aula.codigo; // Código del aula como atributo de datos
-            aulaContainer.appendChild(button);
-
-            // Evento para cada botón
-            button.addEventListener("click", () => {
-                window.location.href = `modulos.html?aula=${aula.codigo}`;
-            });
-        });
-    } catch (error) {
-        console.error("Error al cargar las aulas:", error);
     }
 
     document.getElementById("logout-button").addEventListener("click", () => {

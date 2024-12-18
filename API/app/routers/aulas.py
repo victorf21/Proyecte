@@ -104,3 +104,28 @@ def update_aula(codigo_aula: int, aula: Aula):
         raise HTTPException(status_code=404, detail="Aula no encontrada")
 
     return {"message": "Aula actualizada correctamente", "codigo_aula": codigo_aula}
+
+# Ruta para eliminar una aula
+@router.delete("/delete/{codigo_aula}")
+def delete_aula(codigo_aula: int):
+    try:
+        conn = db_client()
+        if conn is None:
+            raise HTTPException(status_code=500, detail="No se pudo conectar a la base de datos")
+
+        cursor = conn.cursor()
+        # Consulta para eliminar el aula por su código
+        query = "DELETE FROM AULA WHERE Codigo_aula = %s"
+        cursor.execute(query, (codigo_aula,))
+        conn.commit()
+        cursor.close()
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Error de conexión a la base de datos: {e}")
+    finally:
+        if conn:
+            conn.close()
+
+    if cursor.rowcount == 0:
+        raise HTTPException(status_code=404, detail="Aula no encontrada")
+
+    return {"message": "Aula eliminada correctamente", "codigo_aula": codigo_aula}
